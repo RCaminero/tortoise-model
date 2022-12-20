@@ -1,45 +1,44 @@
-import pytest
-from fastapi.testclient import TestClient
-from fastapi import status
+from fastapi.testclient import TestClient 
 
-from main import app
+from main import app 
 
 client = TestClient(app)
 
 data = {
-    "name": "Roberlina Prueba",
-    "age": 20
+    "name": "IsaiahT-Tech",
+    "due_date": "Today",
 }
 
-# def test_create_todo():
-#     response = client.post("/todo/", json=data)
-#     assert response.status_code == status.HTTP_200_OK
-#     res = response.json() 
-#     print(res)
-
-def test_home():
-    response = client.get('/')
-    assert response.status_code == status.HTTP_200_OK
-    assert response.json() == {"Hello": "World"}
+def test_create_todo():
+    response = client.post("/todo", json=data)
+    assert response.status_code == 200
+    assert response.json() == data
 
 # def test_get_all_todo():
-#     response = client.get("/todo", json=data)
-#     assert response.status_code == status.HTTP_200_OK
+#     response = client.get("/todo/", json=data)
+#     assert response.status_code == 200
 #     assert data in response.json()
 
+def test_get_todo():
+    response = client.get("/todo/0")
+    assert response.status_code == 200
+    assert response.json() == data
 
-# def test_get_todos():
-#     response = client.post('/todo/1')
-#     assert response.status_code == status.HTTP_200_OK
-#     assert response.json() == {
-#         'data': {
-#             "id": 1,
-#             "name": "Robby",
-#             "age": 1
-#         }
-#     }
+def test_update_todo():
+    response = client.put("/todo/0", json = {
+        "name": "Test",
+        "due_date": "Now",
+    })
+    assert response.status_code == 200
+    assert response.json() == {   
+        "name": "Test",
+        "due_date": "Now",
+    }
 
-# def test_create_todo():
-#     response = client.post('/todo', json={"name": "Prueba","age": 21})
-#     assert response.status_code == status.HTTP_201_CREATED
-#     assert response.json() == {"name": "Prueba","age": 21}
+def test_delete_todo():
+    response = client.delete("/todo/0")
+    assert response.status_code == 200
+    assert response.json() == {   
+        "name": "Test",
+        "due_date": "Now",
+    }

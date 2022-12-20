@@ -1,12 +1,15 @@
-from tortoise.models import Model
-from tortoise import fields
+from tortoise import fields, models
 
-class Todo(Model):
-    id = fields.IntField(pk = True)
-    name  = fields.CharField(100)
-    age = fields.IntField()
-    date_created = fields.DatetimeField(auto_now_add = True)
-    last_update =  fields.DatetimeField(auto_now = True)
+from tortoise.contrib.pydantic import pydantic_model_creator
 
-    class Meta:
-        ordering = ['date_created']
+class Todo(models.Model):
+    
+    id = fields.IntField(pk=True)
+    todo = fields.CharField(max_length=250)
+    due_date = fields.CharField(max_length=250)
+    
+    class PydanticMeta:
+        pass
+    
+Todo_Pydantic = pydantic_model_creator(Todo, name="Todo")
+TodoIn_Pydantic = pydantic_model_creator(Todo, name="TodoIn", exclude_readonly=True)
